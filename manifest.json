@@ -5,7 +5,7 @@
   "description": "Group tabs by domain with a pluggable grouping strategy interface. Built for Firefox (Manifest V3).",
   "browser_specific_settings": {
     "gecko": {
-      "id": "groupby@example.com",
+      "id": "groupby@here.blue",
       "strict_min_version": "138.0"
     }
   },
