@@ -21,7 +21,7 @@ const ENTRY_POINTS = [
 const baseConfig = {
   bundle: true,
   format: "iife",
-  target: "firefox138",
+  target: "firefox139",
   platform: "browser",
   logLevel: "info",
   sourcemap: "linked",

@@ -6,7 +6,11 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "groupby@here.blue",
-      "strict_min_version": "138.0"
+      "strict_min_version": "139.0",
+      "data_collection_permissions": {
+        "techdata": false,
+        "interactiondata": false
+      }
     }
   },
   "permissions": ["tabs", "tabGroups", "storage"],

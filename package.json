@@ -7,6 +7,7 @@
   "scripts": {
     "build": "node build.mjs",
     "watch": "node build.mjs --watch",
+    "package": "node build.mjs && cd dist && zip -r -X ../groupby-$(node -p \"require('../manifest.json').version\").xpi . -x '*.map'",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
