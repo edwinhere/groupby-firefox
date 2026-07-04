@@ -39,10 +39,10 @@ full configuration including exclusions, color mode, and auto-grouping event hoo
 
 ## Minimum Firefox version
 
-**Firefox 139+** — `tabs.group()` shipped in Firefox 138, but the
-`tabGroups` *permission* (used here for `tabGroups.query/update`) landed in
-139. The `browser_specific_settings.gecko` field enforces this at install
-time.
+**Firefox 142+** — `tabs.group()` shipped in Firefox 138 and the `tabGroups`
+*permission* in 139, but Mozilla's required `data_collection_permissions`
+field is only recognized from Firefox 140 (desktop) / 142 (Android). The
+`browser_specific_settings.gecko` field enforces this at install time.
 
 ## Project structure
 
@@ -112,7 +112,7 @@ npm run typecheck    # tsc --noEmit
 ## Run in Firefox via `about:debugging`
 
 1. `npm install && npm run build`.
-2. Open Firefox 139+ and navigate to `about:debugging#/runtime/this-firefox`.
+2. Open Firefox 142+ and navigate to `about:debugging#/runtime/this-firefox`.
 3. Click **"Load Temporary Add-on…"**.
 4. Select **`dist/manifest.json`** in this project.
 5. The GroupBy button appears in the toolbar. Click it to open the popup.
