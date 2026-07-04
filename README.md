@@ -26,6 +26,16 @@ It uses Firefox's native tab grouping APIs — `browser.tabs.group()` and
 - Non-destructive: it never ungroups or moves tabs the active strategy did not
   speak to, and it skips no-op re-applies via a plan hash.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/images/options.png" alt="GroupBy options page" width="560" />
+</p>
+
+*The options page: pick a grouping strategy (domain or trigram similarity of
+URL/title/domain), normalization mode, within-group sort, exclusions, color
+mode, and the auto-grouping event hooks.*
+
 ## Minimum Firefox version
 
 **Firefox 138+** — WebExtensions support for tab groups landed in 138 and the
