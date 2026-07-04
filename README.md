@@ -29,12 +29,13 @@ It uses Firefox's native tab grouping APIs — `browser.tabs.group()` and
 ## Screenshots
 
 <p align="center">
-  <img src="docs/images/options.png" alt="GroupBy options page" width="560" />
+  <img src="docs/images/popup.png" alt="GroupBy toolbar popup" height="420" />
+  <img src="docs/images/options.png" alt="GroupBy options page" width="420" />
 </p>
 
-*The options page: pick a grouping strategy (domain or trigram similarity of
-URL/title/domain), normalization mode, within-group sort, exclusions, color
-mode, and the auto-grouping event hooks.*
+*Left: the toolbar popup — group/ungroup actions, grouping strategy, normalization,
+within-group sort, trigram threshold, and toggles. Right: the options page —
+full configuration including exclusions, color mode, and auto-grouping event hooks.*
 
 ## Minimum Firefox version
 
