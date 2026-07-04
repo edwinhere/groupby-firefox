@@ -4,12 +4,24 @@
 
 <h1 align="center">GroupBy — Firefox tab grouper</h1>
 
-A Manifest V3 Firefox extension that groups tabs by domain, with an
-architecture built around a pluggable **grouping strategy** interface so richer
-semantic strategies (topic, project, intent, LLM classification) can be added
-later without touching the rest of the system.
+<p align="center">
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/groupby-tab-grouper/">
+    <img alt="Install on Firefox Add-ons" src="https://img.shields.io/badge/Install-Firefox%20Add--ons-FF7139?logo=firefox&logoColor=white&style=for-the-badge" />
+  </a>
+</p>
 
-It uses Firefox's native tab grouping APIs — `browser.tabs.group()` and
+GroupBy tidies up a cluttered tab bar by gathering your open tabs from the
+same website into neat, color-coded, labeled groups — so you can find what you
+need at a glance. **Most users should [install it from Firefox Add-ons]
+(https://addons.mozilla.org/en-US/firefox/addon/groupby-tab-grouper/)** —
+just click “Add to Firefox” and you’re done, no building required.
+
+The rest of this README is for contributors and tinkerers who want to run the
+source, modify it, or add new grouping strategies. Under the hood, GroupBy is a
+Manifest V3 Firefox extension built around a pluggable **grouping strategy**
+interface so richer semantic strategies (topic, project, intent, LLM
+classification) can be added later without touching the rest of the system. It
+uses Firefox's native tab grouping APIs — `browser.tabs.group()` and
 `browser.tabGroups.*` — rather than simulating groups in custom UI.
 
 ## What it does
@@ -109,7 +121,12 @@ npm test             # run vitest unit tests
 npm run typecheck    # tsc --noEmit
 ```
 
-## Run in Firefox via `about:debugging`
+## Run in Firefox via `about:debugging` (developers only)
+
+> If you just want to **use** GroupBy, [install it from Firefox Add-ons]
+(https://addons.mozilla.org/en-US/firefox/addon/groupby-tab-grouper/)
+instead — no build steps required. The instructions below are for running the
+> source yourself during development.
 
 1. `npm install && npm run build`.
 2. Open Firefox 142+ and navigate to `about:debugging#/runtime/this-firefox`.
