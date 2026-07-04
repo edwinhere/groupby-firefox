@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>GroupBy Options</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
+  </head>
+  <body class="options">
+    <header>
+      <h1>GroupBy — Options</h1>
+    </header>
+
+    <section>
+      <h2>Strategy</h2>
+      <div class="row">
+        <label for="strategy">Default strategy</label>
+        <select id="strategy"></select>
+      </div>
+    </section>
+
+    <section>
+      <h2>Domain normalization</h2>
+      <div class="row">
+        <label for="normalization">Mode</label>
+        <select id="normalization">
+          <option value="registrableDomain">Base domain (github.com)</option>
+          <option value="hostname">Hostname (docs.github.com)</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="sort-mode">Sort tabs within each group by</label>
+        <select id="sort-mode">
+          <option value="none">No sorting</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="trigram-threshold">Trigram similarity threshold (grouping) — 0 to 1</label>
+        <input id="trigram-threshold" type="number" min="0" max="1" step="0.05" />
+      </div>
+      <label class="row">
+        <input id="strip-www" type="checkbox" />
+        <span>Strip leading "www." before grouping</span>
+      </label>
+      <label class="row">
+        <input id="include-pinned" type="checkbox" />
+        <span>Include pinned tabs</span>
+      </label>
+      <label class="row">
+        <input id="ungroup-before" type="checkbox" />
+        <span>Ungroup all tabs before each grouping</span>
+      </label>
+    </section>
+
+    <section>
+      <h2>Exclusions</h2>
+      <label for="excluded-domains">Domains never to group (one per line, exact match after normalization)</label>
+      <textarea id="excluded-domains" rows="3" placeholder="example.com&#10;mail.google.com"></textarea>
+      <label for="excluded-prefixes">URL prefixes never to group (one per line)</label>
+      <textarea id="excluded-prefixes" rows="3" placeholder="about:&#10;file:"></textarea>
+    </section>
+
+    <section>
+      <h2>Colors</h2>
+      <div class="row">
+        <label for="color-mode">Color mode</label>
+        <select id="color-mode">
+          <option value="deterministic">Deterministic by domain hash</option>
+          <option value="fixed">Fixed single color</option>
+        </select>
+      </div>
+      <div class="row" id="fixed-color-row" hidden>
+        <label for="fixed-color">Fixed color</label>
+        <select id="fixed-color">
+          <option>grey</option><option>blue</option><option>cyan</option>
+          <option>green</option><option>orange</option><option>red</option>
+          <option>pink</option><option>purple</option>
+        </select>
+      </div>
+      <label class="row">
+        <input id="collapsed" type="checkbox" />
+        <span>Collapse new groups by default</span>
+      </label>
+    </section>
+
+    <section>
+      <h2>Auto-grouping</h2>
+      <label class="row">
+        <input id="auto-group" type="checkbox" />
+        <span>Enable auto-grouping (master switch)</span>
+      </label>
+      <fieldset class="grid">
+        <label><input id="on-create" type="checkbox" /> On tab created</label>
+        <label><input id="on-updated" type="checkbox" /> On tab updated</label>
+        <label><input id="on-moved" type="checkbox" /> On tab moved</label>
+        <label><input id="on-focus" type="checkbox" /> On window focus change</label>
+      </fieldset>
+      <div class="row">
+        <label for="debounce">Debounce (ms)</label>
+        <input id="debounce" type="number" min="0" step="50" />
+      </div>
+    </section>
+
+    <section class="actions">
+      <button id="save" class="primary">Save</button>
+      <span id="status" class="status" aria-live="polite"></span>
+    </section>
+
+    <script src="options.js"></script>
+  </body>
+</html>

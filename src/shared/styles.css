@@ -1,0 +1,108 @@
+:root {
+  --bg: #1e1f22;
+  --fg: #e6e6e6;
+  --muted: #9aa0a6;
+  --accent: #4c9aff;
+  --danger: #ff6b6b;
+  --panel: #2a2c30;
+  --border: #3a3d42;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 13px;
+}
+
+.popup {
+  width: 280px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.options {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.options section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+h1 { font-size: 15px; margin: 0; }
+h2 { font-size: 13px; margin: 0 0 4px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+.summary { color: var(--muted); font-size: 12px; }
+
+button {
+  font: inherit;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--fg);
+  cursor: pointer;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0a0a0a;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+.row label { flex: 1; }
+.popup .row { justify-content: flex-start; }
+
+input[type="checkbox"] { width: 16px; height: 16px; }
+
+select, input[type="number"], textarea {
+  font: inherit;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 7px;
+}
+textarea { width: 100%; resize: vertical; }
+
+fieldset.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+}
+fieldset.grid label { display: flex; gap: 6px; align-items: center; }
+
+.status { color: var(--muted); min-height: 1em; }
+.status[data-kind="error"] { color: var(--danger); }
+
+.actions { display: flex; align-items: center; gap: 12px; }
+footer a { color: var(--muted); font-size: 12px; }
