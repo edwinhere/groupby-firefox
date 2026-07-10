@@ -81,8 +81,8 @@ export function createController(): GroupingController {
       }
       const rawTabs = await browser.tabs.query({ windowId });
       const tabs = (rawTabs as any[]).map(toBrowserTab);
-      const { plans } = await planGroups(tabs, currentSettings);
-      await applyPlans(windowId, plans, api, { force });
+      const { plans, candidates } = await planGroups(tabs, currentSettings);
+      await applyPlans(windowId, plans, api, { force, candidates });
       if (currentSettings.sortMode !== "none") {
         await sortWindow(windowId);
       }

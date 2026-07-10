@@ -114,7 +114,7 @@ describe("applyPlans", () => {
     expect(res.applied).toBe(false);
   });
 
-  it("reuses an existing group with matching name", async () => {
+  it("reuses an existing group with matching name (no candidates)", async () => {
     clearApplied();
     const api = makeFakeApi();
     api.groups.push({
@@ -131,12 +131,58 @@ describe("applyPlans", () => {
     );
     expect(res.reusedGroups).toBe(1);
     expect(res.createdGroups).toBe(0);
-    // Update should have synced color to the plan's color.
+    // Reuse must NOT clobber the existing group's appearance: no update call.
+    const updateCall = api.calls.find((c) => c.op === "update");
+    expect(updateCall).toBeUndefined();
+    expect(api.groups[0].color).toBe("red");
+  });
+
+  it("re-grouping preserves a manually renamed group (membership reuse)", async () => {
+    clearApplied();
+    const api = makeFakeApi();
+    // The user renamed the group "github.com" -> "My Work" and recolored it.
+    api.groups.push({
+      id: 9,
+      title: "My Work",
+      color: "purple",
+      collapsed: true,
+    });
+    // Candidates report the tabs are already in group 9.
+    const candidates = [
+      { id: 1, windowId: 1, index: 0, pinned: false, groupId: 9 },
+      { id: 2, windowId: 1, index: 1, pinned: false, groupId: 9 },
+    ];
+    const res = await applyPlans(
+      1,
+      [plan("github.com", [1, 2], "blue")],
+      api,
+      { force: true, candidates: candidates as any }
+    );
+    expect(res.reusedGroups).toBe(1);
+    expect(res.createdGroups).toBe(0);
+    // The renamed group is reused by membership, and its edits survive: no
+    // update call, and the title/color/collapsed are untouched.
+    expect(api.calls.find((c) => c.op === "update")).toBeUndefined();
+    expect(api.groups[0].title).toBe("My Work");
+    expect(api.groups[0].color).toBe("purple");
+    expect(api.groups[0].collapsed).toBe(true);
+  });
+
+  it("creates a new group and sets its appearance when tabs are ungrouped", async () => {
+    clearApplied();
+    const api = makeFakeApi();
+    const res = await applyPlans(
+      1,
+      [plan("github.com", [1, 2], "green")],
+      api,
+      { force: true, candidates: [] }
+    );
+    expect(res.createdGroups).toBe(1);
     const updateCall = api.calls.find(
       (c) => c.op === "update"
     ) as { args: { groupId: number; props: any } };
-    expect(updateCall.args.groupId).toBe(7);
-    expect(updateCall.args.props.color).toBe("blue");
+    expect(updateCall.args.props.color).toBe("green");
+    expect(updateCall.args.props.title).toBe("github.com");
   });
 
   it("force overrides the hash guard", async () => {

@@ -96,6 +96,14 @@ export function groupedTabIds(
  * Tabs not present in any plan are intentionally left alone: we never ungroup
  * or move tabs the strategy didn't speak to. This is what makes the applier
  * non-destructive.
+ *
+ * Reuse policy (so re-grouping respects user edits):
+ *   1. If the plan's tabs already live in an existing group, reuse THAT group
+ *      (by membership, not title) and leave its title/color/collapsed alone.
+ *      This preserves manual renames, recolors, and collapse state.
+ *   2. Otherwise, if a group with the desired title already exists, reuse it
+ *      (still without overwriting appearance).
+ *   3. Otherwise create a new group and set its initial title/color/collapsed.
  */
 export async function applyPlans(
   windowId: number,
@@ -111,46 +119,89 @@ export async function applyPlans(
 
   const existing = await api.queryGroups(windowId);
 
+  // tabId -> current groupId, for membership-based reuse. Built from the
+  // candidate tabs the planner enriched (each carries its groupId).
+  const tabGroupId = new Map<number, number>();
+  if (options?.candidates) {
+    for (const c of options.candidates) {
+      if (typeof c.groupId === "number" && c.groupId !== -1) {
+        tabGroupId.set(c.id, c.groupId);
+      }
+    }
+  }
+
   let created = 0;
   let reused = 0;
 
   for (const plan of plans) {
-    // Prefer a group with matching name; fall back to any group already
-    // containing one of this plan's tabs.
-    const byName = existing.find((g) => g.title === plan.title);
+    // (1) Membership reuse: pick the group the most plan-tabs already belong
+    // to. This survives user renames because it ignores title entirely.
+    const counts = new Map<number, number>();
+    for (const id of plan.tabIds) {
+      const gid = tabGroupId.get(id);
+      if (gid !== undefined) counts.set(gid, (counts.get(gid) ?? 0) + 1);
+    }
+    let membershipGroupId: number | undefined;
+    let bestCount = 0;
+    for (const [gid, n] of counts) {
+      if (n > bestCount) {
+        bestCount = n;
+        membershipGroupId = gid;
+      }
+    }
 
     let groupId: number;
-    if (byName) {
+    let isNew = false;
+
+    if (membershipGroupId !== undefined) {
       groupId = await api.group({
         windowId,
         tabIds: plan.tabIds,
-        groupId: byName.id,
+        groupId: membershipGroupId,
       });
       reused++;
     } else {
-      groupId = await api.group({
-        windowId,
-        tabIds: plan.tabIds,
-        create: { title: plan.title, color: plan.color },
-      });
-      created++;
-      existing.push({
-        id: groupId,
-        title: plan.title,
-        color: plan.color,
-        collapsed: plan.collapsed,
-      });
+      // (2) Title reuse: no plan-tab is currently grouped, so look for an
+      // existing group with the desired title.
+      const byName = existing.find((g) => g.title === plan.title);
+      if (byName) {
+        groupId = await api.group({
+          windowId,
+          tabIds: plan.tabIds,
+          groupId: byName.id,
+        });
+        reused++;
+      } else {
+        // (3) Create a new group.
+        groupId = await api.group({
+          windowId,
+          tabIds: plan.tabIds,
+          create: { title: plan.title, color: plan.color },
+        });
+        isNew = true;
+        created++;
+        existing.push({
+          id: groupId,
+          title: plan.title,
+          color: plan.color,
+          collapsed: plan.collapsed,
+        });
+      }
     }
 
-    // Sync display properties. Failures here are non-fatal.
-    try {
-      await api.updateGroup(groupId, {
-        title: plan.title,
-        color: plan.color,
-        collapsed: plan.collapsed,
-      });
-    } catch (err) {
-      log.warn("updateGroup failed (non-fatal):", err);
+    // Only set appearance on brand-new groups. On reuse we intentionally leave
+    // the group's title/color/collapsed untouched so the user's manual edits
+    // survive subsequent re-grouping.
+    if (isNew) {
+      try {
+        await api.updateGroup(groupId, {
+          title: plan.title,
+          color: plan.color,
+          collapsed: plan.collapsed,
+        });
+      } catch (err) {
+        log.warn("updateGroup failed (non-fatal):", err);
+      }
     }
   }
 
