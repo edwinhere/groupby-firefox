@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GroupBy — Tab Grouper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Group tabs by domain with a pluggable grouping strategy interface. Built for Firefox (Manifest V3).",
   "browser_specific_settings": {
     "gecko": {
